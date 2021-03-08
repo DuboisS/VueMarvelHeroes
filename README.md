@@ -1,6 +1,8 @@
 # js-marvel
 
 ## Project setup
+Copy `.env` file to a `.env.local` file, fill the values.
+
 ```
 yarn install
 ```
@@ -19,6 +21,3 @@ yarn build
 ```
 yarn lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
