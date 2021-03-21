@@ -3,7 +3,9 @@
     <h1>Heroes list</h1>
     <ul>
       <li v-for="character in characters" :key="character.id">
-        {{ character.name }}
+        <router-link :to="{ name: 'HeroeDetails', params: { id: character.id }}">
+          {{ character.name }}
+        </router-link>
       </li>
       {{ currentPage + 1 }} / {{ countPages }}<br>
       {{ perPage }} results per page<br>
@@ -22,7 +24,7 @@
 import MarvelApiService from '@/services/MarvelApiService';
 
 export default {
-  name: 'ListHeroes.vue',
+  name: 'ListHeroes',
   data() {
     return {
       currentPage: 0,

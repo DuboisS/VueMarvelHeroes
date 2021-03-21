@@ -8,4 +8,19 @@ export default {
       .then((response) => response.json())
       .catch((err) => console.log(err));
   },
+  async findCharacterById(id) {
+    return fetch(`${MARVEL_API}/characters/${id}?apikey=${MARVEL_API_PUBLIC_KEY}&hash=${MARVEL_API_PRIVATE_KEY}`)
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
+  },
+  async findFirstComicByCharacter(character) {
+    return fetch(`${MARVEL_API}/characters/${character.id}/comics?orderBy=focDate&limit=1&apikey=${MARVEL_API_PUBLIC_KEY}&hash=${MARVEL_API_PRIVATE_KEY}`)
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
+  },
+  async findLastComicByCharacter(character) {
+    return fetch(`${MARVEL_API}/characters/${character.id}/comics?orderBy=-focDate&limit=1&apikey=${MARVEL_API_PUBLIC_KEY}&hash=${MARVEL_API_PRIVATE_KEY}`)
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
+  },
 };

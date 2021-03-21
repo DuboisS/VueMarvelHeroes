@@ -1,4 +1,4 @@
-# js-marvel
+# VueMarvelHeroes
 
 ## Project setup
 Copy `.env` file to a `.env.local` file, fill the values.
