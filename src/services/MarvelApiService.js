@@ -31,6 +31,11 @@ export default {
       .then((response) => response.json())
       .catch((err) => console.log(err));
   },
+  async findCharacterByName(name) {
+    return fetch(`${MARVEL_API}/characters?${params.toString()}&orderBy=name&nameStartsWith=${name}`)
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
+  },
   async findFirstComicByCharacter(character) {
     return fetch(`${MARVEL_API}/characters/${character.id}/comics?${params.toString()}&orderBy=focDate&limit=1`)
       .then((response) => response.json())

@@ -1,7 +1,7 @@
 <template>
   <div>
     <form action="">
-      <input type="search" placeholder="Searh by name or description..." @keyup="search(value)">
+      <input type="text" placeholder="Searh by name or description..." v-model="search">
     </form>
     <ul>
       <li v-for="character in characters" :key="character.id">
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import Heroe from '@/components/heroes/Heroe.vue';
 import MarvelApiService from '@/services/MarvelApiService';
 
@@ -29,6 +30,7 @@ export default {
       perPage: 20,
       totalResults: 0,
       characters: [],
+      search: null,
     };
   },
   computed: {
@@ -41,19 +43,29 @@ export default {
   },
   created() {
     this.fillCharacters();
+    this.debouncedGetSearchResult = _.debounce(this.getSearchResult, 350);
+  },
+  watch: {
+    // When search field is updated
+    search() {
+      this.debouncedGetSearchResult();
+    },
   },
   methods: {
     calculOffset() {
       return this.currentPage * this.perPage;
     },
-    async fillCharacters(offset) {
-      const characters = await MarvelApiService.findAllCharacters(offset);
+    fillCharactersArray(characters) {
       this.characters = [];
+
       characters.data.results.forEach((character) => {
         this.characters.push(character);
       });
 
       this.totalResults = characters.data.total;
+    },
+    async fillCharacters(offset) {
+      this.fillCharactersArray(await MarvelApiService.findAllCharacters(offset));
     },
     nextPage() {
       this.currentPage += 1;
@@ -63,8 +75,12 @@ export default {
       this.currentPage -= 1;
       this.fillCharacters(this.calculOffset());
     },
-    search(value) {
-      console.log(value);
+    async getSearchResult() {
+      if (this.search === '') {
+        return this.fillCharacters();
+      }
+
+      return this.fillCharactersArray(await MarvelApiService.findCharacterByName(this.search));
     },
   },
 };
