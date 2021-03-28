@@ -1,17 +1,17 @@
 <template>
   <div>
-    Accueil
-    <ListHeroes/>
+    <h1>Heroes random list</h1>
+    <random-heroes/>
   </div>
 </template>
 
 <script>
-import ListHeroes from '@/components/heroes/ListHeroes.vue';
+import RandomHeroes from '../components/heroes/RandomHeroes.vue';
 
 export default {
   name: 'Home',
   components: {
-    ListHeroes,
+    RandomHeroes,
   },
 };
 </script>

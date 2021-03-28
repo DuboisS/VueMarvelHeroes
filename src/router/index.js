@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import HeroeDetails from '../views/HeroeDetails.vue';
+import ListHeroes from '../views/ListHeroes.vue';
 
 Vue.use(VueRouter);
 
@@ -10,6 +11,11 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/heroes',
+    name: 'ListHeroes',
+    component: ListHeroes,
   },
   {
     path: '/heroes/:id',

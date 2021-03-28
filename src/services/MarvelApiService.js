@@ -1,3 +1,5 @@
+import MathService from './MathService';
+
 const MARVEL_API = process.env.VUE_APP_MARVEL_API;
 const MARVEL_API_PUBLIC_KEY = process.env.VUE_APP_MARVEL_API_PUBLIC_KEY;
 const MARVEL_API_PRIVATE_KEY = process.env.VUE_APP_MARVEL_API_PRIVATE_KEY;
@@ -7,6 +9,9 @@ const params = new URLSearchParams({
   hash: MARVEL_API_PRIVATE_KEY,
 });
 
+/**
+ * Reusable HTTP requests to the marvel API endpoint
+ */
 export default {
   async findAllCharacters(offset = 0) {
     return fetch(`${MARVEL_API}/characters?${params.toString()}&orderBy=name&offset=${offset}`)
@@ -15,6 +20,14 @@ export default {
   },
   async findCharacterById(id) {
     return fetch(`${MARVEL_API}/characters/${id}?${params.toString()}`)
+      .then((response) => response.json())
+      .catch((err) => console.log(err));
+  },
+  async findRandomCharacters(limit = 10) {
+    const totalCharacters = 1493;
+    const offset = MathService.getRandomInt(0, totalCharacters - limit);
+
+    return fetch(`${MARVEL_API}/characters?${params.toString()}&orderBy=modified&offset=${offset}&limit=${limit}`)
       .then((response) => response.json())
       .catch((err) => console.log(err));
   },

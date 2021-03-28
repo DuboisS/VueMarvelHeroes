@@ -1,26 +1,24 @@
 <template>
   <div>
-    <h1>Heroes list</h1>
+    <form action="">
+      <input type="search" placeholder="Searh by name or description..." @keyup="search(value)">
+    </form>
     <ul>
       <li v-for="character in characters" :key="character.id">
-        <router-link :to="{ name: 'HeroeDetails', params: { id: character.id }}">
-          {{ character.name }}
-        </router-link>
+        <heroe :heroe="character"/>
       </li>
       {{ currentPage + 1 }} / {{ countPages }}<br>
       {{ perPage }} results per page<br>
       {{ totalResults }} results
-      <button @click="prevPage" :disabled="currentPage <= 0">
-        Previous
-      </button>
-      <button @click="nextPage" :disabled="currentPage >= countPages - 1">
-        Next
-      </button>
+
+      <button @click="prevPage" :disabled="currentPage <= 0">Previous</button>
+      <button @click="nextPage" :disabled="currentPage >= countPages - 1">Next</button>
     </ul>
   </div>
 </template>
 
 <script>
+import Heroe from '@/components/heroes/Heroe.vue';
 import MarvelApiService from '@/services/MarvelApiService';
 
 export default {
@@ -39,6 +37,7 @@ export default {
     },
   },
   components: {
+    Heroe,
   },
   created() {
     this.fillCharacters();
@@ -47,11 +46,8 @@ export default {
     calculOffset() {
       return this.currentPage * this.perPage;
     },
-    async getCharacters(offset) {
-      return MarvelApiService.findAllCharacters(offset);
-    },
     async fillCharacters(offset) {
-      const characters = await this.getCharacters(offset);
+      const characters = await MarvelApiService.findAllCharacters(offset);
       this.characters = [];
       characters.data.results.forEach((character) => {
         this.characters.push(character);
@@ -66,6 +62,9 @@ export default {
     prevPage() {
       this.currentPage -= 1;
       this.fillCharacters(this.calculOffset());
+    },
+    search(value) {
+      console.log(value);
     },
   },
 };

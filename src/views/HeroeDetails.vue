@@ -41,9 +41,6 @@ export default {
     },
   },
   methods: {
-    async getCharacter(id) {
-      return MarvelApiService.findCharacterById(id);
-    },
     async getFirstComic() {
       return MarvelApiService.findFirstComicByCharacter(this.character);
     },
@@ -51,7 +48,7 @@ export default {
       return MarvelApiService.findLastComicByCharacter(this.character);
     },
     async fillCharacter(id) {
-      const character = await this.getCharacter(id);
+      const character = await MarvelApiService.findCharacterById(id);
       this.character = character.data.results[0];
 
       const firstComic = await this.getFirstComic(this.character);
