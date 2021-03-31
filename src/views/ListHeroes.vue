@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Heroes list</h1>
     <list-all-heroes/>
   </div>
 </template>

@@ -1,19 +1,49 @@
 <template>
   <div>
-    <form action="">
-      <input type="text" placeholder="Searh by name or description..." v-model="search">
-    </form>
-    <ul>
-      <li v-for="character in characters" :key="character.id">
-        <heroe :heroe="character"/>
-      </li>
-      {{ currentPage + 1 }} / {{ countPages }}<br>
-      {{ perPage }} results per page<br>
-      {{ totalResults }} results
+    <vs-row vs-align="flex-start" vs-type="flex" vs-justify="center" vs-w="12"
+            style="margin-bottom: 50px;">
+      <vs-col vs-lg="6" vs-sm="10" vs-xs="12">
+        <vs-row vs-type="flex" vs-justify="space-between" vs-align="center" vs-w="12"
+                style="margin: 10px 0;">
+          <vs-col vs-type="flex" vs-justify="left" vs-align="center" vs-w="4">
+            <h1>Heroes list</h1>
+          </vs-col>
+          <form action="">
+            <vs-input size="small" type="text" placeholder="Searh by name or description..."
+                      v-model="search"/>
+          </form>
+        </vs-row>
+        <vs-card>
+          <div>
+            <vs-list>
+              <vs-list-item :title="character.name" vs-justify="left" v-for="character in characters"
+                            :key="character.id">
+                <template slot="avatar">
+                  <router-link :to="{ name: 'HeroeDetails', params: { id: character.id }}">
+                    <vs-avatar size="large" :src="character.thumbnail.path + '.' + character.thumbnail.extension"
+                               :height="50"/>
+                  </router-link>
+                </template>
+              </vs-list-item>
+            </vs-list>
+          </div>
+        </vs-card>
+        <vs-row vs-align="stretch" vs-type="flex" vs-justify="stretch" vs-w="12">
+          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">{{ perPage }} results per page</vs-col>
+          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
+            <vs-button color="primary" type="filled" @click="prevPage" :disabled="currentPage <= 0"
+                       style="margin-right: 10px">Previous
+            </vs-button>
+            {{ currentPage + 1 }} / {{ countPages }}<br>
+            <vs-button color="primary" type="filled" @click="nextPage" :disabled="currentPage >= countPages - 1"
+                       style="margin-left: 10px">Next
+            </vs-button>
+          </vs-col>
+          <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">{{ totalResults }} results</vs-col>
+        </vs-row>
 
-      <button @click="prevPage" :disabled="currentPage <= 0">Previous</button>
-      <button @click="nextPage" :disabled="currentPage >= countPages - 1">Next</button>
-    </ul>
+      </vs-col>
+    </vs-row>
   </div>
 </template>
 

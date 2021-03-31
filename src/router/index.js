@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import HeroeDetails from '../views/HeroeDetails.vue';
 import ListHeroes from '../views/ListHeroes.vue';
+import Team from '../views/Team.vue';
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/heroes/:id',
     name: 'HeroeDetails',
     component: HeroeDetails,
+  },
+  {
+    path: '/team',
+    name: 'Team',
+    component: Team,
   },
 ];
 

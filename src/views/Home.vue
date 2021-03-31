@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>Heroes random list</h1>
     <random-heroes/>
   </div>
 </template>

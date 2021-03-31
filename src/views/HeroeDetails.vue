@@ -1,17 +1,32 @@
 <template>
   <div>
     <div v-if="!loading">
-      <h1>{{ character.name }}</h1>
-      <img :src="character.thumbnail.path + '.' + character.thumbnail.extension" :height="300">
-      <p v-if="character.description">{{ character.description }}</p>
-      <p v-else>Sorry, no description available for this hero.</p>
+      <vs-row vs-align="flex-start" vs-type="flex" vs-justify="center" vs-w="12" style="margin-top: 10px">
+        <vs-col vs-lg="6" vs-sm="10" vs-xs="12">
+          <vs-card class="cardx">
+            <div slot="header">
+              <h3>{{ character.name }}</h3>
+            </div>
+            <div slot="media">
+              <!--              <img :src="character.thumbnail.path + '.' + character.thumbnail.extension" :height="300">-->
+              <img :src="character.thumbnail.path + '.' + character.thumbnail.extension">
+            </div>
+            <div>
+              <p v-if="character.description">{{ character.description }}</p>
+              <p v-else>Sorry, no description available for this hero.</p>
 
-      <h2>Comics</h2>
-      <p>
-        The first comic is {{ firstComic.title }}
-        ({{ firstComic.dates[0].date | formatStringDate }}) and the lastest {{ lastComic.title }}
-        ({{ lastComic.dates[0].date | formatStringDate }})
-      </p>
+              <h2 style="margin-top: 5px">Comics</h2>
+              <p>
+                The first comic is {{ firstComic.title }}
+                ({{ firstComic.dates[0].date | formatStringDate }}) and the lastest {{ lastComic.title }}
+                ({{ lastComic.dates[0].date | formatStringDate }})
+              </p>
+            </div>
+            <vs-button color="primary" type="filled" v-on:click="addInMyTeam" style="margin-top: 10px">Add in my team</vs-button>
+          </vs-card>
+
+        </vs-col>
+      </vs-row>
     </div>
   </div>
 </template>
@@ -58,6 +73,16 @@ export default {
       this.lastComic = lastComic.data.results[0];
 
       this.loading = false;
+    },
+    addInMyTeam() {
+      let team = this.$session.get('team');
+      if (typeof team === 'undefined') {
+        team = [];
+      }
+      if (!team.includes(this.$route.params.id)) {
+        team.push(this.$route.params.id);
+      }
+      this.$session.set('team', team);
     },
   },
 };
