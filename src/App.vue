@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <vs-navbar class="nabarx">
+    <vs-navbar class="nabarx" color="#ED1D24" text-color="white">
       <div slot="title">
-        <vs-navbar-title>
+        <vs-navbar-title style="color: white">
           Heroes
         </vs-navbar-title>
       </div>

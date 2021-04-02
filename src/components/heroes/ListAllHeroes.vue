@@ -16,15 +16,15 @@
         <vs-card>
           <div>
             <vs-list>
-              <vs-list-item :title="character.name" vs-justify="left" v-for="character in characters"
-                            :key="character.id">
-                <template slot="avatar">
-                  <router-link :to="{ name: 'HeroeDetails', params: { id: character.id }}">
+              <router-link :to="{ name: 'HeroeDetails', params: { id: character.id }}" v-for="character in characters"
+                           :key="character.id">
+                <vs-list-item :title="character.name" vs-justify="left">
+                  <template slot="avatar">
                     <vs-avatar size="large" :src="character.thumbnail.path + '.' + character.thumbnail.extension"
                                :height="50"/>
-                  </router-link>
-                </template>
-              </vs-list-item>
+                  </template>
+                </vs-list-item>
+              </router-link>
             </vs-list>
           </div>
         </vs-card>

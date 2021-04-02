@@ -24,7 +24,16 @@
             </div>
             <vs-button color="primary" type="filled" v-on:click="addInMyTeam" style="margin-top: 10px">Add in my team</vs-button>
           </vs-card>
-
+          <vs-popup class="holamundo"  title="Heroe added to your team!" :active.sync="popup">
+            <p>
+              The heroe {{character.name}} has been succesfully added to your team!
+            </p>
+          </vs-popup>
+          <vs-popup class="holamundo"  title="Error!" :active.sync="popup2">
+            <p>
+              Impossible to add the heroe to your team: it is already in!
+            </p>
+          </vs-popup>
         </vs-col>
       </vs-row>
     </div>
@@ -42,6 +51,8 @@ export default {
       character: null,
       firstComic: null,
       lastComic: null,
+      popup: false,
+      popup2: false,
     };
   },
   created() {
@@ -81,6 +92,9 @@ export default {
       }
       if (!team.includes(this.$route.params.id)) {
         team.push(this.$route.params.id);
+        this.popup = true;
+      } else {
+        this.popup2 = true;
       }
       this.$session.set('team', team);
     },
