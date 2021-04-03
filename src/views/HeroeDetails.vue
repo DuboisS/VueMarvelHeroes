@@ -56,6 +56,7 @@ export default {
     };
   },
   created() {
+    this.$vs.loading();
     this.fillCharacter(this.$route.params.id);
   },
   computed: {
@@ -83,6 +84,7 @@ export default {
       const lastComic = await this.getLastComic(this.character);
       this.lastComic = lastComic.data.results[0];
 
+      this.$vs.loading.close();
       this.loading = false;
     },
     addInMyTeam() {

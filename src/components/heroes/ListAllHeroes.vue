@@ -64,6 +64,9 @@ export default {
     };
   },
   computed: {
+    /**
+     * Calcul pages number based on totalResults and perPage values
+     */
     countPages() {
       return Math.ceil(this.totalResults / this.perPage);
     },
@@ -73,7 +76,7 @@ export default {
   },
   created() {
     this.fillCharacters();
-    this.debouncedGetSearchResult = _.debounce(this.getSearchResult, 350);
+    this.debouncedGetSearchResult = _.debounce(this.getSearchResult, 350); //
   },
   watch: {
     // When search field is updated
@@ -85,6 +88,9 @@ export default {
     calculOffset() {
       return this.currentPage * this.perPage;
     },
+    /**
+     * Fill characters array with given characters
+     */
     fillCharactersArray(characters) {
       this.characters = [];
 
@@ -94,9 +100,17 @@ export default {
 
       this.totalResults = characters.data.total;
     },
+    /**
+     * Fill characters array with given offset
+     */
     async fillCharacters(offset) {
+      this.$vs.loading();
       this.fillCharactersArray(await MarvelApiService.findAllCharacters(offset));
+      this.$vs.loading.close();
     },
+    /**
+     * Update currentPage variable and get new characters with offset
+     */
     nextPage() {
       this.currentPage += 1;
       this.fillCharacters(this.calculOffset());
@@ -105,6 +119,9 @@ export default {
       this.currentPage -= 1;
       this.fillCharacters(this.calculOffset());
     },
+    /**
+     * Get characters based on search value
+     */
     async getSearchResult() {
       if (this.search === '') {
         return this.fillCharacters();

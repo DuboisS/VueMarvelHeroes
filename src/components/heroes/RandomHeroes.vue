@@ -46,13 +46,21 @@ export default {
     this.fillCharacters();
   },
   methods: {
+    /**
+     * Fill characters array with random characters
+     */
     async fillCharacters() {
+      this.$vs.loading();
       const characters = await MarvelApiService.findRandomCharacters();
       this.characters = [];
       characters.data.results.forEach((character) => {
         this.characters.push(character);
       });
+      this.$vs.loading.close();
     },
+    /**
+     * Refresh characters array with new random characters
+     */
     refresh() {
       this.fillCharacters();
     },
