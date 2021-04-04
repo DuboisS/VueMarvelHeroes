@@ -8,7 +8,6 @@
               <h3>{{ character.name }}</h3>
             </div>
             <div slot="media">
-              <!--              <img :src="character.thumbnail.path + '.' + character.thumbnail.extension" :height="300">-->
               <img :src="character.thumbnail.path + '.' + character.thumbnail.extension">
             </div>
             <div>
@@ -24,12 +23,12 @@
             </div>
             <vs-button color="primary" type="filled" v-on:click="addInMyTeam" style="margin-top: 10px">Add in my team</vs-button>
           </vs-card>
-          <vs-popup class="holamundo"  title="Heroe added to your team!" :active.sync="popup">
+          <vs-popup class="holamundo"  title="Heroe added to your team!" :active.sync="popupSuccess">
             <p>
               The heroe {{character.name}} has been succesfully added to your team!
             </p>
           </vs-popup>
-          <vs-popup class="holamundo"  title="Error!" :active.sync="popup2">
+          <vs-popup class="holamundo"  title="Error!" :active.sync="popupError">
             <p>
               Impossible to add the heroe to your team: it is already in!
             </p>
@@ -51,21 +50,13 @@ export default {
       character: null,
       firstComic: null,
       lastComic: null,
-      popup: false,
-      popup2: false,
+      popupSuccess: false,
+      popupError: false,
     };
   },
   created() {
     this.$vs.loading();
     this.fillCharacter(this.$route.params.id);
-  },
-  computed: {
-    thumbnailCharacter() {
-      if (!this.loading) {
-        return '';
-      }
-      return `${this.character.thumbnail.path}.${this.character.thumbnail.extension}`;
-    },
   },
   methods: {
     async getFirstComic() {
@@ -74,6 +65,9 @@ export default {
     async getLastComic() {
       return MarvelApiService.findLastComicByCharacter(this.character);
     },
+    /**
+     * Get and fill character data
+     */
     async fillCharacter(id) {
       const character = await MarvelApiService.findCharacterById(id);
       this.character = character.data.results[0];
@@ -87,6 +81,9 @@ export default {
       this.$vs.loading.close();
       this.loading = false;
     },
+    /**
+     * Add character to the team
+     */
     addInMyTeam() {
       let team = this.$session.get('team');
       if (typeof team === 'undefined') {
@@ -94,9 +91,9 @@ export default {
       }
       if (!team.includes(this.$route.params.id)) {
         team.push(this.$route.params.id);
-        this.popup = true;
+        this.popupSuccess = true;
       } else {
-        this.popup2 = true;
+        this.popupError = true;
       }
       this.$session.set('team', team);
     },
