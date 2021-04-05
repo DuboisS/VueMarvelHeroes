@@ -17,18 +17,16 @@
         <vs-card>
           <div>
             <vs-list>
-              <router-link :to="{ name: 'HeroeDetails', params: { id: character.id }}" v-for="character in characters"
-                           :key="character.id">
-                <vs-list-item :title="character.name" vs-justify="left">
-                  <template slot="avatar">
-                    <vs-avatar size="large" :src="character.thumbnail.path + '.' + character.thumbnail.extension"
-                               :height="50"/>
-                  </template>
-                </vs-list-item>
-              </router-link>
+              <heroe v-for="character in characters" :key="character.id" :heroe="character" :canBeDelete="true">
+              </heroe>
             </vs-list>
           </div>
         </vs-card>
+        <vs-popup classContent="popup-example" title="Error" :active.sync="popup4" style="z-index: 200">
+          <h2>Team already exists</h2>
+          <p>This name is already taken by another team. Please enter another name or delete the team that uses this
+            name.</p>
+        </vs-popup>
         <vs-popup classContent="popup-example" title="Team saving" :active.sync="popup">
           <h2 style="margin-bottom: 10px;">Please enter a name for your team</h2>
           <vs-row vs-type="flex" vs-justify="space-between">
@@ -68,6 +66,7 @@ export default {
       popup: false,
       popup2: false,
       popup3: false,
+      popup4: false,
       teams: [],
     };
   },
@@ -91,6 +90,9 @@ export default {
         this.characters.push(character.data.results[0]);
       });
     },
+    /**
+     * Fill characters array with heroes stored in the session team
+     */
     async fillCharacters() {
       const characters = [];
       const ids = this.$session.get('team');
@@ -101,34 +103,40 @@ export default {
       }
       this.fillCharactersArray(characters);
     },
-    deleteFromMyTeam(id) {
-      const heroe = this.characters.filter((item) => item.id === id);
-      if (typeof heroe !== 'undefined') {
-        this.characters.splice(this.characters.indexOf(heroe), 1);
-      }
-      const team = this.$session.get('team');
-      if (team.includes(id)) {
-        team.splice(team.indexOf(id), 1);
-      }
-      this.$session.set('team', team);
-    },
+    /**
+     * Save the current team in the localStorage (with check that team is not empty
+     * and check that the name of the team is not already token
+     */
     saveTeam() {
       if (this.teamName.length > 0) {
-        this.teams[this.teamName] = this.$session.get('team');
-        localStorage.teams = JSON.stringify(this.teams);
-        this.popup = false;
-        this.popup2 = false;
-        this.teamName = '';
+        if (typeof this.teams[this.teamName] === 'undefined') {
+          this.teams[this.teamName] = this.$session.get('team');
+          localStorage.teams = JSON.stringify(this.teams);
+          this.popup = false;
+          this.popup2 = false;
+          this.teamName = '';
+        } else {
+          this.popup4 = true;
+        }
       }
     },
+    /**
+     * Delete the current team
+     */
     deleteTeam() {
       this.$session.set('team', []);
       this.characters = [];
       this.popup2 = false;
     },
+    /**
+     * Open the team manager in a popup
+     */
     openManager() {
       this.popup3 = true;
     },
+    /**
+     * Delete a team stored in the localStorage
+     */
     deleteTeamLocal(name) {
       const newTeam = {};
       for (const key in this.teams) {
@@ -139,6 +147,9 @@ export default {
       this.teams = newTeam;
       localStorage.teams = JSON.stringify(this.teams);
     },
+    /**
+     * Select and display a team from the localStorage
+     */
     select(name) {
       const team = this.teams[name];
       this.$session.set('team', team);

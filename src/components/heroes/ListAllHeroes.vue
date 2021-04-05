@@ -16,15 +16,7 @@
         <vs-card>
           <div>
             <vs-list>
-              <router-link :to="{ name: 'HeroeDetails', params: { id: character.id }}" v-for="character in characters"
-                           :key="character.id">
-                <vs-list-item :title="character.name" vs-justify="left">
-                  <template slot="avatar">
-                    <vs-avatar size="large" :src="character.thumbnail.path + '.' + character.thumbnail.extension"
-                               :height="50"/>
-                  </template>
-                </vs-list-item>
-              </router-link>
+              <heroe v-for="character in characters" :key="character.id" :heroe="character"></heroe>
             </vs-list>
           </div>
         </vs-card>
