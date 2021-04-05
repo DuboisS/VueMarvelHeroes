@@ -103,6 +103,9 @@ export default {
       this.isInMyTeam = this.team.includes(this.character.id);
       console.log(this.isInMyTeam);
     },
+    /**
+     * Add the hero to the current team
+     */
     addInMyTeam() {
       if (!this.team.includes(this.character.id)) {
         this.team.push(this.character.id);
@@ -112,7 +115,7 @@ export default {
       this.isInMyTeam = true;
     },
     /**
-     * Delete a hero from the current team
+     * Delete the hero from the current team
      */
     deleteFromMyTeam() {
       if (this.team.includes(this.character.id)) {
@@ -121,6 +124,7 @@ export default {
         this.$session.set('team', this.team);
         this.isInMyTeam = false;
       }
+      this.$session.set('team', this.team);
     },
   },
 };
