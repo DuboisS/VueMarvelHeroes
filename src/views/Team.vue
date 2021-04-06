@@ -8,7 +8,7 @@
           <vs-col vs-type="flex" vs-justify="left" vs-align="center" vs-w="4"><h1>My team</h1></vs-col>
           <vs-col vs-type="flex" vs-justify="flex-end" vs-w="8">
             <vs-button @click="popup=true" style="margin-right: 5px">Save</vs-button>
-            <vs-button v-on:click="deleteTeam" style="margin: 0 5px">Delete</vs-button>
+            <vs-button @click="popup5=true" style="margin: 0 5px">Delete</vs-button>
             <vs-button @click="popup2=true" style="margin: 0 5px">New team</vs-button>
             <vs-button @click="openManager" style="margin-left: 5px">Manage my teams</vs-button>
           </vs-col>
@@ -24,13 +24,13 @@
         </vs-card>
         <vs-popup classContent="popup-example" title="Error" :active.sync="popup4" style="z-index: 200">
           <h2>Team already exists</h2>
-          <p>This name is already taken by another team. Please enter another name or delete the team that uses this
-            name.</p>
+          <p>This name is already taken by another team.
+            Please enter another name or delete the team that uses this name.</p>
         </vs-popup>
         <vs-popup classContent="popup-example" title="Team saving" :active.sync="popup">
           <h2 style="margin-bottom: 10px;">Please enter a name for your team</h2>
           <vs-row vs-type="flex" vs-justify="space-between">
-            <vs-input class="inputx" placeholder="Placeholder" v-model="teamName"/>
+            <vs-input class="inputx" placeholder="Placeholder" v-model="teamName" :danger="dangerInput" danger-text="This name is already taken by another team!"/>
             <vs-button @click="saveTeam" color="primary" type="filled">Save</vs-button>
           </vs-row>
         </vs-popup>
@@ -38,6 +38,11 @@
           <h2 style="margin-bottom: 10px;">Do you want to save your team?</h2>
           <vs-button @click="popup=true" color="primary" type="filled" style="margin-right: 10px">Yes</vs-button>
           <vs-button @click="deleteTeam" color="primary" type="filled">No</vs-button>
+        </vs-popup>
+        <vs-popup classContent="popup-example" title="Delete the team team" :active.sync="popup5">
+          <h2 style="margin-bottom: 10px;">Do you want to delete your team?</h2>
+          <vs-button @click="deleteTeam" color="primary" type="filled" style="margin-right: 10px">Yes</vs-button>
+          <vs-button @click="popup5=false" color="primary" type="filled">No</vs-button>
         </vs-popup>
         <vs-popup classContent="popup-example" title="Create a new team" :active.sync="popup3">
           <h2>List of your teams</h2>
@@ -67,6 +72,8 @@ export default {
       popup2: false,
       popup3: false,
       popup4: false,
+      popup5: false,
+      dangerInput: false,
       teams: [],
     };
   },
@@ -113,10 +120,11 @@ export default {
           this.teams[this.teamName] = this.$session.get('team');
           localStorage.teams = JSON.stringify(this.teams);
           this.popup = false;
-          this.popup2 = false;
+          if (this.popup2) this.deleteTeam();
+          this.dangerInput = false;
           this.teamName = '';
         } else {
-          this.popup4 = true;
+          this.dangerInput = true;
         }
       }
     },
@@ -127,6 +135,7 @@ export default {
       this.$session.set('team', []);
       this.characters = [];
       this.popup2 = false;
+      this.popup5 = false;
     },
     /**
      * Open the team manager in a popup
