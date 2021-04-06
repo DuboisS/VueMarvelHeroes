@@ -101,7 +101,6 @@ export default {
       this.loading = false;
 
       this.isInMyTeam = this.team.includes(this.character.id);
-      console.log(this.isInMyTeam);
     },
     /**
      * Add the hero to the current team
