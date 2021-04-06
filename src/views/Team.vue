@@ -7,10 +7,10 @@
         <vs-row vs-type="flex" vs-justify="space-between" vs-w="12" style="margin: 10px 0;">
           <vs-col vs-type="flex" vs-justify="left" vs-align="center" vs-w="4"><h1>My team</h1></vs-col>
           <vs-col vs-type="flex" vs-justify="flex-end" vs-w="8">
-            <vs-button @click="popup=true" style="margin-right: 5px">Save</vs-button>
-            <vs-button @click="popup5=true" style="margin: 0 5px">Delete</vs-button>
-            <vs-button @click="popup2=true" style="margin: 0 5px">New team</vs-button>
-            <vs-button @click="openManager" style="margin-left: 5px">Manage my teams</vs-button>
+            <vs-button @click="popup=true" style="margin-right: 5px" :disabled="characters.length===0">Save</vs-button>
+            <vs-button @click="popup5=true" style="margin: 0 5px" :disabled="characters.length===0">Delete</vs-button>
+            <vs-button @click="popup2=(characters.length>0)" :disabled="characters.length===0" style="margin: 0 5px">New team</vs-button>
+            <vs-button @click="openManager" style="margin-left: 5px" :disabled="Object.keys(teams).length===0">Manage my teams</vs-button>
           </vs-col>
 
         </vs-row>
@@ -103,9 +103,12 @@ export default {
     async fillCharacters() {
       const characters = [];
       const ids = this.$session.get('team');
+      console.log(ids);
       if (typeof ids !== 'undefined') {
         for (const id of ids) {
-          characters.push(await MarvelApiService.findCharacterById(id));
+          const heroe = await MarvelApiService.findCharacterById(id);
+          console.log(heroe);
+          characters.push(heroe);
         }
       }
       this.fillCharactersArray(characters);
@@ -155,6 +158,7 @@ export default {
       }
       this.teams = newTeam;
       localStorage.teams = JSON.stringify(this.teams);
+      if (Object.keys(this.teams).length === 0) this.popup3 = false;
     },
     /**
      * Select and display a team from the localStorage
